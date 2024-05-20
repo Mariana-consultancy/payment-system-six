@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"payment-system-six/internal/models"
 	"payment-system-six/internal/ports"
 
 	"gorm.io/driver/postgres"
@@ -24,9 +25,9 @@ func Initialize(dbURI string) (*gorm.DB, error) {
 
 	conn, err := gorm.Open(postgres.Open(dbURI), &gorm.Config{})
 	if err != nil {
-		//	log.Fatal(err)
+		log.Fatal(err)
 	}
-	err = conn.AutoMigrate()
+	err = conn.AutoMigrate(&models.User{})
 	if err != nil {
 		return nil, err
 	}

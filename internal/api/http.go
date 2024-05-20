@@ -1,11 +1,14 @@
 package api
 
 import (
+	//"fmt"
+	//"payment-system-six/internal/models"
 	"fmt"
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/ports"
 
 	"github.com/gin-gonic/gin"
+	//"github.com/gin-gonic/gin"
 )
 
 type HTTPHandler struct {
@@ -30,11 +33,11 @@ func (u *HTTPHandler) GetUserFromContext(c *gin.Context) (*models.User, error) {
 	return user, nil
 }
 
-func (u *HTTPHandler) GetTokenFromContext(c *gin.Context) (string, error) {
+/*func (u *HTTPHandler) GetTokenFromContext(c *gin.Context) (string, error) {
 	tokenI, exists := c.Get("access_token")
 	if !exists {
 		return "", fmt.Errorf("error getting access token")
 	}
 	tokenstr := tokenI.(string)
 	return tokenstr, nil
-}
+} */

@@ -2,6 +2,7 @@ package server
 
 import (
 	"payment-system-six/internal/api"
+	"payment-system-six/internal/middleware"
 	"payment-system-six/internal/ports"
 	"time"
 
@@ -24,6 +25,15 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	r := router.Group("/")
 	{
 		r.GET("/", handler.Readiness)
+		r.POST("/create", handler.CreateUser)
+		r.POST("/login", handler.LoginUser)
+	}
+
+	// AuthorizeAdmin authorizes all the authorized users haldlers
+	authorizeAdmin := r.Group("/admin")
+	authorizeAdmin.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
+	{
+		authorizeAdmin.GET("/user", handler.GetUserByEmail)
 	}
 
 	return router
