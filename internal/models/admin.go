@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type Admin struct {
 	gorm.Model
 	LockedAt     time.Time `json:"locked_at"`
 	IsLocked     bool      `json:"is_locked"`
@@ -20,7 +20,7 @@ type User struct {
 	LoginCounter int       `json:"login_counter"`
 }
 
-type LoginRequestUser struct {
+type LoginRequestAdmin struct {
 	Email    string `json:"email"`
 	Password string `son:"password"`
 }

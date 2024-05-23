@@ -33,6 +33,18 @@ func (u *HTTPHandler) GetUserFromContext(c *gin.Context) (*models.User, error) {
 	return user, nil
 }
 
+func (u *HTTPHandler) GetAdminFromContext(c *gin.Context) (*models.Admin, error) {
+	contextAdmin, exists := c.Get("admin")
+	if !exists {
+		return nil, fmt.Errorf("error getting admin from context")
+	}
+	admin, ok := contextAdmin.(*models.Admin)
+	if !ok {
+		return nil, fmt.Errorf("an error occurred")
+	}
+	return admin, nil
+}
+
 /*func (u *HTTPHandler) GetTokenFromContext(c *gin.Context) (string, error) {
 	tokenI, exists := c.Get("access_token")
 	if !exists {

@@ -25,12 +25,20 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	r := router.Group("/")
 	{
 		r.GET("/", handler.Readiness)
-		r.POST("/create", handler.CreateUser)
-		r.POST("/login", handler.LoginUser)
+	}
+
+	user := r.Group("/user")
+	{
+		user.POST("/create", handler.CreateUser)
+		user.POST("/login", handler.LoginUser)
 	}
 
 	// AuthorizeAdmin authorizes all the authorized users haldlers
 	authorizeAdmin := r.Group("/admin")
+	{
+		authorizeAdmin.POST("/create", handler.CreateAdmin)
+		authorizeAdmin.POST("/login", handler.LoginAdmin)
+	}
 	authorizeAdmin.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
 	{
 		authorizeAdmin.GET("/user", handler.GetUserByEmail)

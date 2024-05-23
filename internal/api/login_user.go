@@ -14,20 +14,24 @@ import (
 
 // Login User
 func (u *HTTPHandler) LoginUser(c *gin.Context) {
-	var loginRequest *models.LoginRequest
+	var loginRequest *models.LoginRequestUser
 	err := c.ShouldBind(&loginRequest)
 	if err != nil {
 		util.Response(c, "invalid request", 400, err.Error(), nil)
 		return
 	}
 
-	if strings.TrimSpace(loginRequest.Email) == "" || strings.TrimSpace(loginRequest.Password) == "" {
-		util.Response(c, "Email and Password must not be empty", 400, nil, nil)
-		return
-	}
-
 	loginRequest.Email = strings.TrimSpace(loginRequest.Email)
 	loginRequest.Password = strings.TrimSpace(loginRequest.Password)
+
+	if loginRequest.Email == "" {
+		util.Response(c, "Email must not be empty", 400, nil, nil)
+		return
+	}
+	if loginRequest.Password == "" {
+		util.Response(c, "Password must not be empty", 400, nil, nil)
+		return
+	}
 
 	user, err := u.Repository.FindUserByEmail(loginRequest.Email)
 	if err != nil {
