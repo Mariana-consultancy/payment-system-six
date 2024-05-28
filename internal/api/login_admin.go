@@ -54,7 +54,6 @@ func (u *HTTPHandler) LoginAdmin(c *gin.Context) {
 	if admin.LoginCounter >= 3 {
 		admin.IsLocked = true
 		admin.LockedAt = time.Now()
-		admin.UpdatedAt = time.Now()
 		err = u.Repository.UpdateAdmin(admin)
 		if err != nil {
 			util.Response(c, "There is an error occured", 500, err.Error(), nil)
@@ -69,7 +68,6 @@ func (u *HTTPHandler) LoginAdmin(c *gin.Context) {
 	match := util.CheckPasswordHash(loginRequest.Password, admin.Password)
 	if !match {
 		admin.LoginCounter++
-		admin.UpdatedAt = time.Now()
 		err = u.Repository.UpdateAdmin(admin)
 		if err != nil {
 			util.Response(c, "There is an error occured", 500, err.Error(), nil)
@@ -80,7 +78,6 @@ func (u *HTTPHandler) LoginAdmin(c *gin.Context) {
 	}
 
 	admin.LoginCounter = 0
-	admin.UpdatedAt = time.Now()
 	err = u.Repository.UpdateAdmin(admin)
 	if err != nil {
 		util.Response(c, "There is an error occured", 500, err.Error(), nil)

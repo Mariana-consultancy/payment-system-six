@@ -73,7 +73,7 @@ func (u *HTTPHandler) CreateAdmin(c *gin.Context) {
 
 	err = u.Repository.CreateAdmin(admin)
 	if err != nil {
-		util.Response(c, "Admin not created", 400, err.Error(), nil)
+		util.Response(c, "Admin not created", 500, err.Error(), nil)
 		return
 	}
 	util.Response(c, "Admin created", 200, nil, nil)

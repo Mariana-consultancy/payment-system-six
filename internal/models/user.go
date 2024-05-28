@@ -18,9 +18,10 @@ type User struct {
 	Phone        string    `json:"phone" binding:"required"`
 	Address      string    `json:"address" binding:"required"`
 	LoginCounter int       `json:"login_counter"`
+	Balance      float64   `json:"balance"`
 }
 
 type LoginRequestUser struct {
-	Email    string `json:"email"`
-	Password string `son:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
 }

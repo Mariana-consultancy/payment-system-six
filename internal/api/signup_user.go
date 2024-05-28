@@ -73,7 +73,7 @@ func (u *HTTPHandler) CreateUser(c *gin.Context) {
 
 	err = u.Repository.CreateUser(user)
 	if err != nil {
-		util.Response(c, "User not created", 400, err.Error(), nil)
+		util.Response(c, "User not created", 500, err.Error(), nil)
 		return
 	}
 	util.Response(c, "User created", 200, nil, nil)

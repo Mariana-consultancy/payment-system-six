@@ -1,11 +1,22 @@
 package repository
 
-import "payment-system-six/internal/models"
+import (
+	"payment-system-six/internal/models"
+)
 
 func (p *Postgres) FindUserByEmail(email string) (*models.User, error) {
 	user := &models.User{}
 
 	if err := p.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (p *Postgres) GetUserByID(userID uint) (*models.User, error) {
+	user := &models.User{}
+
+	if err := p.DB.Where("ID = ?", userID).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
