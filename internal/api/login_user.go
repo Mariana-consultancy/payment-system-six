@@ -6,7 +6,6 @@ import (
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/util"
 	"strings"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -39,7 +38,7 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 		return
 	}
 
-	if user.IsLocked {
+	/* if user.IsLocked {
 
 		if time.Now().After(user.LockedAt.Add(time.Hour*2)) || time.Now().Equal(user.LockedAt.Add(time.Hour*2)) {
 			user.IsLocked = false
@@ -49,9 +48,9 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 			return
 		}
 
-	}
+	} */
 
-	if user.LoginCounter >= 3 {
+	/* if user.LoginCounter >= 3 {
 		user.IsLocked = true
 		user.LockedAt = time.Now()
 		err = u.Repository.UpdateUser(user)
@@ -62,12 +61,12 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 
 		util.Response(c, "Your Account has been locked after 3 attempts. Please try again after 2 hours", 401, nil, nil)
 		return
-	}
+	} */
 
 	// Verify the password
 	match := util.CheckPasswordHash(loginRequest.Password, user.Password)
 	if !match {
-		user.LoginCounter++
+		//user.LoginCounter++
 		err = u.Repository.UpdateUser(user)
 		if err != nil {
 			util.Response(c, "There is an error occured", 500, err.Error(), nil)
@@ -77,12 +76,12 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 		return
 	}
 
-	user.LoginCounter = 0
+	/* user.LoginCounter = 0
 	err = u.Repository.UpdateUser(user)
 	if err != nil {
 		util.Response(c, "There is an error occured", 500, err.Error(), nil)
 		return
-	}
+	} */
 
 	accessClaims, refreshClaims := middleware.GenerateClaims(user.Email)
 
