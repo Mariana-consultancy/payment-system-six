@@ -16,21 +16,21 @@ type FundRequest struct {
 }
 
 type MakePayment struct {
-	PayeeEmail string  `json:"payee_email" binding:"required,email"`
-	Amount     float64 `json:"amount" binding:"required"`
+	AccountNumber uint    `json:"account_number" binding:"required"`
+	Amount        float64 `json:"amount" binding:"required"`
 }
 
 type PaymentRequests struct {
 	gorm.Model
-	RequesterID  uint    `json:"requester_id"`
-	RecipientID  uint    `json:"recipient_id"`
-	Amount       float64 `json:"transaction_amount"`
-	Status       string  `json:"balance_before"`
-	Desscription string  `json:"description"`
+	RequesterAccountNumber uint    `json:"requester_account_number"`
+	RecipientAccountNumber uint    `json:"recipient_account_number"`
+	Amount                 float64 `json:"transaction_amount"`
+	Status                 string  `json:"balance_before"`
+	Desscription           string  `json:"description"`
 }
 
 type RequestPayment struct {
-	RecipientEmail string  `json:"recipient_email" binding:"required,email"`
-	Amount         float64 `json:"amount" binding:"required"`
-	Desscription   string  `json:"description"`
+	AccountNumber uint    `json:"account_number" binding:"required"`
+	Amount        float64 `json:"amount" binding:"required"`
+	Desscription  string  `json:"description"`
 }

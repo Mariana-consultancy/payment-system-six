@@ -71,6 +71,14 @@ func (u *HTTPHandler) CreateUser(c *gin.Context) {
 	}
 	user.Password = hashedPassword
 
+	// Generate Account number
+	accountNumber, err := u.Repository.GenerateUserAccountNumber()
+	if err != nil {
+		util.Response(c, "Internal server error", 500, err.Error(), nil)
+		return
+	}
+	user.AccountNumber = accountNumber
+
 	err = u.Repository.CreateUser(user)
 	if err != nil {
 		util.Response(c, "User not created", 500, err.Error(), nil)

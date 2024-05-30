@@ -60,9 +60,9 @@ func (u *HTTPHandler) AddFunds(c *gin.Context) {
 		return
 	}
 	Transaction.BalanceAfter = user.Balance
-	Transaction.AccountID = user.ID
-	Transaction.PayerID = user.ID
-	Transaction.PayeeID = user.ID
+	Transaction.AccountNumber = user.AccountNumber
+	Transaction.PayerAccountNumber = user.AccountNumber
+	Transaction.PayeeAccountNumber = user.AccountNumber
 	Transaction.TransactionType = "Credit"
 	Transaction.TransactionAmount = fundRequest.Amount
 	Transaction.TransactionDate = time.Now()

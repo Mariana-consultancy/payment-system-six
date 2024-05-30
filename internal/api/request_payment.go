@@ -3,7 +3,6 @@ package api
 import (
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/util"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,13 +13,6 @@ func (u *HTTPHandler) RequestPayment(c *gin.Context) {
 	var paymentRequest models.PaymentRequests
 	if err := c.ShouldBind(&requestPayment); err != nil {
 		util.Response(c, "invalid request", 400, err.Error(), nil)
-		return
-	}
-
-	requestPayment.RecipientEmail = strings.TrimSpace(requestPayment.RecipientEmail)
-
-	if requestPayment.RecipientEmail == "" {
-		util.Response(c, "Recipient email must not be empty", 400, nil, nil)
 		return
 	}
 
@@ -35,19 +27,19 @@ func (u *HTTPHandler) RequestPayment(c *gin.Context) {
 		return
 	}
 
-	recipient, err := u.Repository.FindUserByEmail(requestPayment.RecipientEmail)
+	recipient, err := u.Repository.GetUserByAccountNumber(requestPayment.AccountNumber)
 	if err != nil {
-		util.Response(c, "Recipient not found. Please enter valid Recipient email address", 404, err.Error(), nil)
+		util.Response(c, "Recipient not found. Please enter valid account number", 404, err.Error(), nil)
 		return
 	}
 
-	if user.Email == recipient.Email {
+	if user.AccountNumber == recipient.AccountNumber {
 		util.Response(c, "Request unsuccessful due to requester account and recipient account are smae.", 400, nil, nil)
 		return
 	}
 
-	paymentRequest.RequesterID = user.ID
-	paymentRequest.RecipientID = recipient.ID
+	paymentRequest.RequesterAccountNumber = user.AccountNumber
+	paymentRequest.RecipientAccountNumber = recipient.AccountNumber
 	paymentRequest.Amount = requestPayment.Amount
 	paymentRequest.Desscription = requestPayment.Desscription
 	paymentRequest.Status = "Pending"

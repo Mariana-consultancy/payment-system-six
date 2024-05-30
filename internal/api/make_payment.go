@@ -3,7 +3,6 @@ package api
 import (
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/util"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,13 +18,6 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 		return
 	}
 
-	makePayment.PayeeEmail = strings.TrimSpace(makePayment.PayeeEmail)
-
-	if makePayment.PayeeEmail == "" {
-		util.Response(c, "Payee email must not be empty", 400, nil, nil)
-		return
-	}
-
 	if makePayment.Amount <= 0 {
 		util.Response(c, "Amount must be greater than zero", 400, nil, nil)
 		return
@@ -37,13 +29,13 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 		return
 	}
 
-	payee, err := u.Repository.FindUserByEmail(makePayment.PayeeEmail)
+	payee, err := u.Repository.GetUserByAccountNumber(makePayment.AccountNumber)
 	if err != nil {
-		util.Response(c, "Payee not found. Please enter valid payee email address", 404, err.Error(), nil)
+		util.Response(c, "Payee not found. Please enter valid account number", 404, err.Error(), nil)
 		return
 	}
 
-	if user.Email == payee.Email {
+	if user.AccountNumber == payee.AccountNumber {
 		util.Response(c, "Payment unsuccessful due to payer account and payee account are smae.", 400, nil, nil)
 		return
 	}
@@ -70,17 +62,17 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 	}
 
 	payerTransaction.BalanceAfter = user.Balance
-	payerTransaction.AccountID = user.ID
-	payerTransaction.PayerID = user.ID
-	payerTransaction.PayeeID = payee.ID
+	payerTransaction.AccountNumber = user.AccountNumber
+	payerTransaction.PayerAccountNumber = user.AccountNumber
+	payerTransaction.PayeeAccountNumber = payee.AccountNumber
 	payerTransaction.TransactionType = "Debit"
 	payerTransaction.TransactionAmount = makePayment.Amount
 	payerTransaction.TransactionDate = time.Now()
 
 	payeeTransaction.BalanceAfter = payee.Balance
-	payeeTransaction.AccountID = payee.ID
-	payeeTransaction.PayerID = user.ID
-	payeeTransaction.PayeeID = payee.ID
+	payeeTransaction.AccountNumber = payee.AccountNumber
+	payeeTransaction.PayerAccountNumber = user.AccountNumber
+	payeeTransaction.PayeeAccountNumber = payee.AccountNumber
 	payeeTransaction.TransactionType = "Credit"
 	payeeTransaction.TransactionAmount = makePayment.Amount
 	payeeTransaction.TransactionDate = time.Now()

@@ -1,6 +1,8 @@
 package util
 
 import (
+	"crypto/rand"
+	"math/big"
 	"net/http"
 	"regexp"
 	"time"
@@ -70,4 +72,19 @@ func ValidatePassword(password string) bool {
 	}
 
 	return true
+}
+
+func Generate8DigitNumber() (uint, error) {
+
+	// Define the range for 8-digit numbers
+	min := int64(10000000)
+	max := int64(99999999)
+	rangeSize := max - min + 1
+
+	// Generate a random number within the range
+	n, err := rand.Int(rand.Reader, big.NewInt(rangeSize))
+	if err != nil {
+		return 0, err
+	}
+	return uint(n.Int64() + min), nil
 }
