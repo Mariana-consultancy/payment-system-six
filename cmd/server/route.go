@@ -38,7 +38,7 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	user.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
 	{
 		user.POST("/addfunds", handler.AddFunds)
-		user.POST("/makepayment", handler.MakePayment)
+		user.POST("/transferpayment", handler.TransferPayment)
 		user.POST("/requestpayment", handler.RequestPayment)
 	}
 

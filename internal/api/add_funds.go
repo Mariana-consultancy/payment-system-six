@@ -3,7 +3,6 @@ package api
 import (
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/util"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,11 +17,11 @@ func (u *HTTPHandler) AddFunds(c *gin.Context) {
 		return
 	}
 
-	fundRequest.CardNumber = strings.TrimSpace(fundRequest.CardNumber)
+	/* fundRequest.CardNumber = strings.TrimSpace(fundRequest.CardNumber)
 	fundRequest.CardExpiry = strings.TrimSpace(fundRequest.CardExpiry)
-	fundRequest.CardCVV = strings.TrimSpace(fundRequest.CardCVV)
+	fundRequest.CardCVV = strings.TrimSpace(fundRequest.CardCVV) */
 
-	if fundRequest.CardNumber == "" {
+	/* if fundRequest.CardNumber == "" {
 		util.Response(c, "Card Number must not be empty", 400, nil, nil)
 		return
 	}
@@ -33,17 +32,17 @@ func (u *HTTPHandler) AddFunds(c *gin.Context) {
 	if fundRequest.CardCVV == "" {
 		util.Response(c, "CVV must not be empty", 400, nil, nil)
 		return
-	}
+	} */
 	if fundRequest.Amount <= 0 {
 		util.Response(c, "Amount must be greater than zero", 400, nil, nil)
 		return
 	}
 
-	err := u.Repository.ValidateCard(fundRequest.CardNumber, fundRequest.CardExpiry, fundRequest.CardCVV)
+	/* err := u.Repository.ValidateCard(fundRequest.CardNumber, fundRequest.CardExpiry, fundRequest.CardCVV)
 	if err != nil {
 		util.Response(c, "Invalid Card Details", 400, err.Error(), nil)
 		return
-	}
+	} */
 
 	user, err := u.GetUserFromContext(c)
 	if err != nil {

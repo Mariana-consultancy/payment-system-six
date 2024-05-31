@@ -12,10 +12,10 @@ type CardDetails struct {
 
 type FundRequest struct {
 	Amount float64 `json:"amount" binding:"required"`
-	CardDetails
+	//CardDetails
 }
 
-type MakePayment struct {
+type TransferPayment struct {
 	AccountNumber uint    `json:"account_number" binding:"required"`
 	Amount        float64 `json:"amount" binding:"required"`
 }

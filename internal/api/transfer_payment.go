@@ -9,16 +9,16 @@ import (
 )
 
 // Send funds
-func (u *HTTPHandler) MakePayment(c *gin.Context) {
-	var makePayment models.MakePayment
+func (u *HTTPHandler) TransferPayment(c *gin.Context) {
+	var transferPayment models.TransferPayment
 	var payerTransaction models.Transaction
 	var payeeTransaction models.Transaction
-	if err := c.ShouldBind(&makePayment); err != nil {
+	if err := c.ShouldBind(&transferPayment); err != nil {
 		util.Response(c, "invalid request", 400, err.Error(), nil)
 		return
 	}
 
-	if makePayment.Amount <= 0 {
+	if transferPayment.Amount <= 0 {
 		util.Response(c, "Amount must be greater than zero", 400, nil, nil)
 		return
 	}
@@ -29,9 +29,9 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 		return
 	}
 
-	payee, err := u.Repository.GetUserByAccountNumber(makePayment.AccountNumber)
+	payee, err := u.Repository.GetUserByAccountNumber(transferPayment.AccountNumber)
 	if err != nil {
-		util.Response(c, "Payee not found. Please enter valid account number", 404, err.Error(), nil)
+		util.Response(c, "Payee not found. Please enter valid account number", 400, err.Error(), nil)
 		return
 	}
 
@@ -40,13 +40,13 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 		return
 	}
 
-	if user.Balance-makePayment.Amount < 0 {
-		util.Response(c, "Payment unsuccessful due to insufficient funds.", 404, nil, nil)
+	if user.Balance-transferPayment.Amount < 0 {
+		util.Response(c, "Payment unsuccessful due to insufficient funds.", 400, nil, nil)
 		return
 	}
 
 	payeeTransaction.BalanceBefore = payee.Balance
-	payee.Balance += makePayment.Amount
+	payee.Balance += transferPayment.Amount
 	err = u.Repository.UpdateUser(payee)
 	if err != nil {
 		util.Response(c, "There is an error occured", 500, err.Error(), nil)
@@ -54,7 +54,7 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 	}
 
 	payerTransaction.BalanceBefore = user.Balance
-	user.Balance -= makePayment.Amount
+	user.Balance -= transferPayment.Amount
 	err = u.Repository.UpdateUser(user)
 	if err != nil {
 		util.Response(c, "There is an error occured", 500, err.Error(), nil)
@@ -66,7 +66,7 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 	payerTransaction.PayerAccountNumber = user.AccountNumber
 	payerTransaction.PayeeAccountNumber = payee.AccountNumber
 	payerTransaction.TransactionType = "Debit"
-	payerTransaction.TransactionAmount = makePayment.Amount
+	payerTransaction.TransactionAmount = transferPayment.Amount
 	payerTransaction.TransactionDate = time.Now()
 
 	payeeTransaction.BalanceAfter = payee.Balance
@@ -74,7 +74,7 @@ func (u *HTTPHandler) MakePayment(c *gin.Context) {
 	payeeTransaction.PayerAccountNumber = user.AccountNumber
 	payeeTransaction.PayeeAccountNumber = payee.AccountNumber
 	payeeTransaction.TransactionType = "Credit"
-	payeeTransaction.TransactionAmount = makePayment.Amount
+	payeeTransaction.TransactionAmount = transferPayment.Amount
 	payeeTransaction.TransactionDate = time.Now()
 
 	err = u.Repository.RecordTransaction(&payerTransaction)
