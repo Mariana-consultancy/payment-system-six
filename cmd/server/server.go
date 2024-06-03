@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"payment-system-one/internal/api"
-	"payment-system-one/internal/repository"
+	"payment-system-six/internal/api"
+	"payment-system-six/internal/repository"
 	"time"
 )
 

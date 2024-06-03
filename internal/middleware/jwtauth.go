@@ -5,7 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"log"
-	"payment-system-one/internal/util"
+	"payment-system-six/internal/util"
 	"time"
 )
 

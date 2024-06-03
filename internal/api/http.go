@@ -1,11 +1,11 @@
 package api
 
 import (
-	//"fmt"
-	//"payment-system-six/internal/models"
 	"fmt"
+	"payment-system-six/internal/models"
+	"payment-system-six/internal/ports"
+
 	"github.com/gin-gonic/gin"
-	//"github.com/gin-gonic/gin"
 )
 
 type HTTPHandler struct {
