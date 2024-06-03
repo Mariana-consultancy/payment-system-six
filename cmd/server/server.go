@@ -60,14 +60,6 @@ type Params struct {
 
 // InitDBParams gets environment variables needed to run the app
 func InitDBParams() Params {
-
-	//for debugging
-	/* pwd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	errEnv := godotenv.Load(filepath.Join(pwd, "../.env")) */
-
 	errEnv := godotenv.Load()
 	if errEnv != nil {
 		log.Println("Error loading .env file")

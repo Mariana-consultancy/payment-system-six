@@ -1,28 +1,36 @@
 package models
 
-import (
-	"time"
-
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	LockedAt time.Time `json:"locked_at"`
-	//IsLocked     bool      `json:"is_locked"`
-	AccountNumber uint   `json:"account_number" gorm:"unique;not null"`
-	FirstName     string `json:"first_name" binding:"required"`
-	Lastname      string `json:"last_name" binding:"required"`
-	Password      string `json:"password" binding:"required"`
-	DateOfBirth   string `json:"date_of_birth" binding:"required"`
-	Email         string `json:"email" binding:"required,email"`
-	Phone         string `json:"phone" binding:"required"`
-	Address       string `json:"address" binding:"required"`
-	//LoginCounter int       `json:"login_counter"`
-	Balance float64 `json:"balance"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Password     string `json:"password"`
+	DateOfBirth  string `json:"date_of_birth"`
+	Email        string `json:"email"`
+	Phone        string `json:"phone"`
+	Address      string `json:"address"`
+	LoginCounter int    `json:"login_counter"`
+	IsLocked     bool   `json:"is_locked"`
 }
 
-type LoginRequestUser struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+//type UserProfile struct {
+//	gorm.Model
+//	ValidIdentity string `json:"valid_identity"`
+//	PassPort string `json:"passport"`
+//
+//}
+
+type Transaction struct {
+	gorm.Model
+	UserID          uint    `json:"user_id"`
+	Amount          float64 `json:"amount"`
+	Reference       string  `json:"reference"`
+	TransactionType string  `json:"transaction_type"`
+}
+
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
