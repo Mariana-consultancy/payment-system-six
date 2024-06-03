@@ -99,11 +99,18 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 		return
 	}
 
+	/* notifications, err := u.Repository.GetNotificationsByUserID(user.ID)
+	if err != nil {
+		util.Response(c, "Internal server error", 500, err.Error(), nil)
+		return
+	} */
+
 	c.Header("access_token", *accessToken)
 	c.Header("refresh_token", *refreshToken)
 
 	util.Response(c, "Login successful", 200, gin.H{
-		"user":          user,
+		"user": user,
+		//"notification_details": notifications,
 		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	}, nil)

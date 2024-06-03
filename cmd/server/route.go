@@ -31,7 +31,6 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	{
 		user.POST("/create", handler.CreateUser)
 		user.POST("/login", handler.LoginUser)
-		//user.POST("/addfunds", handler.AddFunds)
 	}
 
 	// AuthorizeAdmin authorizes all the authorized users haldlers
@@ -40,6 +39,17 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		user.POST("/addfunds", handler.AddFunds)
 		user.POST("/transferpayment", handler.TransferPayment)
 		user.POST("/requestpayment", handler.RequestPayment)
+		user.GET("/getallpaymentrequests", handler.GetAllPaymentRequests)
+		user.POST("/getpaymentrequest", handler.GetPaymentRequest)
+		user.PUT("/approvepaymentrequest", handler.ApprovePaymentRequest)
+		user.PUT("/declinepaymentrequest", handler.DeclinePaymentRequest)
+		user.DELETE("/deletepaymentrequest", handler.DeletePaymentRequest)
+		user.GET("/getallnotifications", handler.GetAllNotifications)
+		user.POST("/getnotification", handler.GetNotification)
+		user.PUT("/readnotification", handler.ReadNotification)
+		user.PUT("/readAllnotifications", handler.ReadAllNotifications)
+		user.DELETE("/deletenotification", handler.DeleteNotification)
+		user.DELETE("/deleallnotifications", handler.DeleteAllNotifications)
 	}
 
 	// AuthorizeAdmin authorizes all the authorized users haldlers

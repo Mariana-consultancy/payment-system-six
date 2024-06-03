@@ -11,6 +11,7 @@ import (
 func (u *HTTPHandler) RequestPayment(c *gin.Context) {
 	var requestPayment models.RequestPayment
 	var paymentRequest models.PaymentRequests
+	var notification models.Notification
 	if err := c.ShouldBind(&requestPayment); err != nil {
 		util.Response(c, "invalid request", 400, err.Error(), nil)
 		return
@@ -47,6 +48,19 @@ func (u *HTTPHandler) RequestPayment(c *gin.Context) {
 	err = u.Repository.RequestFunds(&paymentRequest)
 	if err != nil {
 		util.Response(c, "Payment request unsuccessful", 400, err.Error(), nil)
+		return
+	}
+
+	notification.SenderID = user.ID
+	notification.ReceiverID = recipient.ID
+	notification.Title = "Payment request from " + user.FirstName + " " + user.Lastname
+	notification.Message = "You have a new payment request from " + user.FirstName + " " + user.Lastname + " Please go to payment request page to approve or decline"
+	notification.NotificationType = "Payment Request"
+	notification.Status = "Unread"
+
+	err = u.Repository.CreateNotification(&notification)
+	if err != nil {
+		util.Response(c, "Payment request sent successfully but Notification unsuccessful", 200, err.Error(), nil)
 		return
 	}
 	util.Response(c, "Payment request sent successfully", 200, nil, nil)
