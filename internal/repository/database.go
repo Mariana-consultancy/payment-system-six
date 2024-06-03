@@ -1,11 +1,12 @@
 package repository
 
 import (
+	"log"
+	"payment-system-six/internal/models"
+	"payment-system-six/internal/ports"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"payment-system-one/internal/models"
-	"payment-system-one/internal/ports"
 )
 
 type Postgres struct {
@@ -24,9 +25,9 @@ func Initialize(dbURI string) (*gorm.DB, error) {
 
 	conn, err := gorm.Open(postgres.Open(dbURI), &gorm.Config{})
 	if err != nil {
-		//	log.Fatal(err)
+		log.Fatal(err)
 	}
-	err = conn.AutoMigrate(&models.User{})
+	err = conn.AutoMigrate(&models.User{}, &models.Admin{}, &models.Transaction{}, &models.PaymentRequests{})
 	if err != nil {
 		return nil, err
 	}
