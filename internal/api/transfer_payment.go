@@ -13,6 +13,7 @@ func (u *HTTPHandler) TransferPayment(c *gin.Context) {
 	var transferPayment models.TransferPayment
 	var payerTransaction models.Transaction
 	var payeeTransaction models.Transaction
+	var notification models.Notification
 	if err := c.ShouldBind(&transferPayment); err != nil {
 		util.Response(c, "invalid request", 400, err.Error(), nil)
 		return
@@ -89,6 +90,18 @@ func (u *HTTPHandler) TransferPayment(c *gin.Context) {
 		return
 	}
 
-	util.Response(c, "Funds transfer successfully", 200, nil, nil)
+	notification.ReceiverID = payee.ID
+	notification.SenderID = user.ID
+	notification.Title = "Funds Received"
+	notification.Message = "Your account has been credited."
+	notification.NotificationType = "Transfer funds"
+	notification.Status = "Unread"
+
+	err = u.Repository.CreateNotification(&notification)
+	if err != nil {
+		util.Response(c, "Funds transfered successfully but Notification unsuccessful", 200, err.Error(), nil)
+		return
+	}
+	util.Response(c, "Funds transfered successfully", 200, nil, nil)
 
 }

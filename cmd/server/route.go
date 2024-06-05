@@ -33,10 +33,11 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		user.POST("/login", handler.LoginUser)
 	}
 
-	// AuthorizeAdmin authorizes all the authorized users haldlers
-	user.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
+	// AuthorizeUser authorizes all the authorized users haldlers
+	user.Use(middleware.AuthorizeUser(repository.FindUserByEmail, repository.TokenInBlacklist))
 	{
 		user.POST("/addfunds", handler.AddFunds)
+		user.POST("/depositfunds", handler.DepositFunds)
 		user.POST("/transferpayment", handler.TransferPayment)
 		user.POST("/requestpayment", handler.RequestPayment)
 		user.GET("/getallpaymentrequests", handler.GetAllPaymentRequests)
@@ -53,14 +54,20 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	}
 
 	// AuthorizeAdmin authorizes all the authorized users haldlers
-	authorizeAdmin := r.Group("/admin")
+	Admin := r.Group("/admin")
 	{
-		authorizeAdmin.POST("/create", handler.CreateAdmin)
-		authorizeAdmin.POST("/login", handler.LoginAdmin)
+		Admin.POST("/create", handler.CreateAdmin)
+		Admin.POST("/login", handler.LoginAdmin)
 	}
-	authorizeAdmin.Use(middleware.AuthorizeAdmin(repository.FindUserByEmail, repository.TokenInBlacklist))
+	Admin.Use(middleware.AuthorizeAdmin(repository.FindAdminByEmail, repository.TokenInBlacklist))
 	{
-		authorizeAdmin.GET("/user", handler.GetUserByEmail)
+		Admin.GET("/user", handler.GetUserByEmail)
+		Admin.GET("/getallusers", handler.GetAllUsers)
+		Admin.GET("/getalldepositrequests", handler.GetAllDepositRequests)
+		Admin.POST("/getalldepositrequestsbyaccountnumber", handler.GetAllDepositRequestsByAccountNumber)
+		Admin.POST("/getdepositrequestbyrequestid", handler.GetDepositRequestByRequestID)
+		Admin.PUT("/approvedepositrequest", handler.ApproveDepositRequest)
+		Admin.PUT("/declinedepositrequest", handler.DeclineDepositRequest)
 	}
 
 	return router

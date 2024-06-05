@@ -115,29 +115,3 @@ func (u *HTTPHandler) LoginUser(c *gin.Context) {
 		"refresh_token": refreshToken,
 	}, nil)
 }
-
-// Protected Route
-func (u *HTTPHandler) GetUserByEmail(c *gin.Context) {
-
-	_, err := u.GetUserFromContext(c)
-	if err != nil {
-		util.Response(c, "User not logged in", 500, err.Error(), nil)
-		return
-	}
-
-	email := c.Query("email")
-	email = strings.TrimSpace(email)
-	if email == "" {
-		util.Response(c, "Email is required", 400, nil, nil)
-		return
-	}
-
-	user, err := u.Repository.FindUserByEmail(email)
-	if err != nil {
-		util.Response(c, "User not found", 404, err.Error(), nil)
-		return
-	}
-
-	util.Response(c, "User Found", 200, user, nil)
-
-}

@@ -6,6 +6,7 @@ type Repository interface {
 	GenerateUserAccountNumber() (uint, error)
 	FindUserByEmail(email string) (*models.User, error)
 	GetUserByID(userID uint) (*models.User, error)
+	FindAllUsers() ([]models.User, error)
 	GetUserByAccountNumber(accountNumber uint) (*models.User, error)
 	FindAdminByEmail(email string) (*models.Admin, error)
 	TokenInBlacklist(token *string) bool
@@ -27,4 +28,9 @@ type Repository interface {
 	UpdateAllNotificationsByUserID(userID uint) error
 	DeleteNotification(notification *models.Notification) error
 	DeleteAllNotificationByUserID(userID uint) error
+	DepositFunds(depositRequest *models.DepositRequests) error
+	GetAllDepositRequests() ([]models.DepositRequests, error)
+	GetAllDepositRequestsByAccountNumber(accountNumber uint) (*[]models.DepositRequests, error)
+	GetDepositRequestByRequestID(requestID uint) (*models.DepositRequests, error)
+	UpdateDepositRequest(depositRequest *models.DepositRequests) error
 }

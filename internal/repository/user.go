@@ -16,6 +16,15 @@ func (p *Postgres) FindUserByEmail(email string) (*models.User, error) {
 	return user, nil
 }
 
+func (p *Postgres) FindAllUsers() ([]models.User, error) {
+	var users []models.User
+
+	if err := p.DB.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func (p *Postgres) GetUserByID(userID uint) (*models.User, error) {
 	user := &models.User{}
 

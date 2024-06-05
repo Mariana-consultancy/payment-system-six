@@ -75,3 +75,36 @@ func (u *HTTPHandler) AddFunds(c *gin.Context) {
 	util.Response(c, "Funds added successfully", 200, nil, nil)
 
 }
+
+func (u *HTTPHandler) DepositFunds(c *gin.Context) {
+	var fundRequest *models.FundRequest
+	var depositRequest models.DepositRequests
+	if err := c.ShouldBind(&fundRequest); err != nil {
+		util.Response(c, "invalid request", 400, err.Error(), nil)
+		return
+	}
+
+	if fundRequest.Amount <= 0 {
+		util.Response(c, "Amount must be greater than zero", 400, nil, nil)
+		return
+	}
+
+	user, err := u.GetUserFromContext(c)
+	if err != nil {
+		util.Response(c, "User not logged in", 400, err.Error(), nil)
+		return
+	}
+
+	depositRequest.DepositorAccountNumber = user.AccountNumber
+	depositRequest.Amount = fundRequest.Amount
+	depositRequest.Status = "Pending"
+
+	err = u.Repository.DepositFunds(&depositRequest)
+	if err != nil {
+		util.Response(c, "Payment request unsuccessful", 400, err.Error(), nil)
+		return
+	}
+
+	util.Response(c, "Deposit request submitted successfully", 200, nil, nil)
+
+}
