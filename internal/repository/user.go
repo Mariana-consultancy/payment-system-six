@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"fmt"
 	"payment-system-six/internal/models"
 	"payment-system-six/internal/util"
+	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -14,6 +16,15 @@ func (p *Postgres) FindUserByEmail(email string) (*models.User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (p *Postgres) FindAllUsers() ([]models.User, error) {
+	var users []models.User
+
+	if err := p.DB.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (p *Postgres) GetUserByID(userID uint) (*models.User, error) {
@@ -69,4 +80,55 @@ func (p *Postgres) GenerateUserAccountNumber() (uint, error) {
 		}
 		// Number already exists, generate a new one
 	}
+}
+
+func (p *Postgres) GenerateStatement(accountNumber uint) (*models.StatementDetails, error) {
+	statementDetails := &models.StatementDetails{}
+	transactions := &[]models.Transaction{}
+	if err := p.DB.Where("account_number = ?", accountNumber).Order("created_at").Find(&transactions).Error; err != nil {
+		return nil, err
+	}
+
+	if len(*transactions) == 0 {
+		return nil, fmt.Errorf("no transactions found for account number %d", accountNumber)
+	}
+
+	// Calculate the opening balance from the first transaction
+	statementDetails.OpeningBalance = (*transactions)[0].BalanceBefore
+
+	var totalIn float64
+	var totalOut float64
+
+	for _, transaction := range *transactions {
+		statementEntry := models.Statement{
+			Date:           transaction.TransactionDate,
+			Type:           transaction.TransactionType,
+			AccountBalance: transaction.BalanceAfter,
+		}
+
+		if transaction.PayerAccountNumber == accountNumber && transaction.PayeeAccountNumber == accountNumber {
+			statementEntry.Transaction = "Deposit"
+			statementEntry.In = transaction.TransactionAmount
+			totalIn += transaction.TransactionAmount
+		} else if transaction.PayerAccountNumber == accountNumber {
+			// This is an outgoing transaction
+			statementEntry.Transaction = "Transfer to Acc#  " + strconv.FormatUint(uint64(transaction.PayeeAccountNumber), 10)
+			statementEntry.Out = transaction.TransactionAmount
+			totalOut += transaction.TransactionAmount
+
+		} else if transaction.PayeeAccountNumber == accountNumber {
+			// This is an incoming transaction
+			statementEntry.Transaction = "Received from Acc#  " + strconv.FormatUint(uint64(transaction.PayerAccountNumber), 10)
+			statementEntry.In = transaction.TransactionAmount
+			totalIn += transaction.TransactionAmount
+		}
+
+		statementDetails.Statement = append(statementDetails.Statement, statementEntry)
+	}
+
+	statementDetails.TotalIn = totalIn
+	statementDetails.TotalOut = totalOut
+	statementDetails.ClosingBlance = (*transactions)[len(*transactions)-1].BalanceAfter
+
+	return statementDetails, nil
 }
