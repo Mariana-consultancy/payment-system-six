@@ -33,4 +33,5 @@ type Repository interface {
 	GetAllDepositRequestsByAccountNumber(accountNumber uint) (*[]models.DepositRequests, error)
 	GetDepositRequestByRequestID(requestID uint) (*models.DepositRequests, error)
 	UpdateDepositRequest(depositRequest *models.DepositRequests) error
+	GenerateStatement(accountNumber uint) (*models.StatementDetails, error)
 }

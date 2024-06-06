@@ -102,6 +102,20 @@ func (u *HTTPHandler) TransferPayment(c *gin.Context) {
 		util.Response(c, "Funds transfered successfully but Notification unsuccessful", 200, err.Error(), nil)
 		return
 	}
+
+	notification = models.Notification{}
+	notification.ReceiverID = user.ID
+	notification.SenderID = user.ID
+	notification.Title = "Funds Transfered"
+	notification.Message = "Your account has been Debit."
+	notification.NotificationType = "Transfer funds"
+	notification.Status = "Unread"
+
+	err = u.Repository.CreateNotification(&notification)
+	if err != nil {
+		util.Response(c, "Funds transfered successfully but Notification unsuccessful", 200, err.Error(), nil)
+		return
+	}
 	util.Response(c, "Funds transfered successfully", 200, nil, nil)
 
 }

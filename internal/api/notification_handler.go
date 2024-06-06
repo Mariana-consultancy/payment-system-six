@@ -36,7 +36,7 @@ func (u *HTTPHandler) GetNotification(c *gin.Context) {
 		return
 	}
 
-	notification, err := u.Repository.GetPaymentRequestByRequestID(getNotification.NotificationID)
+	notification, err := u.Repository.GetNotificationByNotificationID(getNotification.NotificationID)
 	if err != nil {
 		util.Response(c, "Notification ID does not exist", 400, err.Error(), nil)
 		return

@@ -45,6 +45,7 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		user.PUT("/approvepaymentrequest", handler.ApprovePaymentRequest)
 		user.PUT("/declinepaymentrequest", handler.DeclinePaymentRequest)
 		user.DELETE("/deletepaymentrequest", handler.DeletePaymentRequest)
+		user.POST("/generatestatement", handler.GenerateStatementUser)
 		user.GET("/getallnotifications", handler.GetAllNotifications)
 		user.POST("/getnotification", handler.GetNotification)
 		user.PUT("/readnotification", handler.ReadNotification)
@@ -61,13 +62,13 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 	}
 	Admin.Use(middleware.AuthorizeAdmin(repository.FindAdminByEmail, repository.TokenInBlacklist))
 	{
-		Admin.GET("/user", handler.GetUserByEmail)
 		Admin.GET("/getallusers", handler.GetAllUsers)
 		Admin.GET("/getalldepositrequests", handler.GetAllDepositRequests)
 		Admin.POST("/getalldepositrequestsbyaccountnumber", handler.GetAllDepositRequestsByAccountNumber)
 		Admin.POST("/getdepositrequestbyrequestid", handler.GetDepositRequestByRequestID)
 		Admin.PUT("/approvedepositrequest", handler.ApproveDepositRequest)
 		Admin.PUT("/declinedepositrequest", handler.DeclineDepositRequest)
+		Admin.POST("/generatestatement", handler.GenerateStatementAdmin)
 	}
 
 	return router

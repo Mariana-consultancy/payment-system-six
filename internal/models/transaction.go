@@ -17,3 +17,20 @@ type Transaction struct {
 	BalanceAfter       float64   `json:"balance_after"`
 	TransactionDate    time.Time `json:"transaction_date"`
 }
+
+type StatementDetails struct {
+	OpeningBalance float64     `json:"opening_balance"`
+	TotalIn        float64     `json:"total_in"`
+	TotalOut       float64     `json:"total_out"`
+	ClosingBlance  float64     `json:"closing_balance"`
+	Statement      []Statement `json:"statement"`
+}
+
+type Statement struct {
+	Date           time.Time `json:"date"`
+	Type           string    `json:"type"`
+	Transaction    string    `json:"transaction"`
+	In             float64   `json:"in"`
+	Out            float64   `json:"out"`
+	AccountBalance float64   `json:"account_balance"`
+}

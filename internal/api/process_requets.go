@@ -155,6 +155,20 @@ func (u *HTTPHandler) ApprovePaymentRequest(c *gin.Context) {
 		util.Response(c, "Payment request approved successfully but Notification unsuccessful", 200, err.Error(), nil)
 		return
 	}
+
+	notification = models.Notification{}
+	notification.ReceiverID = user.ID
+	notification.SenderID = user.ID
+	notification.Title = "Funds Transfered"
+	notification.Message = "Your account has been Debit."
+	notification.NotificationType = "Payment Request"
+	notification.Status = "Unread"
+
+	err = u.Repository.CreateNotification(&notification)
+	if err != nil {
+		util.Response(c, "Payment request approved successfully but Notification unsuccessful", 200, err.Error(), nil)
+		return
+	}
 	util.Response(c, "Request approved successfully", 200, nil, nil)
 
 }
