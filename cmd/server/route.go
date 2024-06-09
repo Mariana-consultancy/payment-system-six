@@ -52,6 +52,7 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		user.PUT("/readAllnotifications", handler.ReadAllNotifications)
 		user.DELETE("/deletenotification", handler.DeleteNotification)
 		user.DELETE("/deleallnotifications", handler.DeleteAllNotifications)
+		user.POST("/logout", handler.Logout)
 	}
 
 	// AuthorizeAdmin authorizes all the authorized users haldlers
@@ -69,6 +70,7 @@ func SetupRouter(handler *api.HTTPHandler, repository ports.Repository) *gin.Eng
 		Admin.PUT("/approvedepositrequest", handler.ApproveDepositRequest)
 		Admin.PUT("/declinedepositrequest", handler.DeclineDepositRequest)
 		Admin.POST("/generatestatement", handler.GenerateStatementAdmin)
+		Admin.POST("/logout", handler.Logout)
 	}
 
 	return router

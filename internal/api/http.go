@@ -42,11 +42,11 @@ func (u *HTTPHandler) GetAdminFromContext(c *gin.Context) (*models.Admin, error)
 	return admin, nil
 }
 
-/*func (u *HTTPHandler) GetTokenFromContext(c *gin.Context) (string, error) {
+func (u *HTTPHandler) GetTokenFromContext(c *gin.Context) (string, error) {
 	tokenI, exists := c.Get("access_token")
 	if !exists {
 		return "", fmt.Errorf("error getting access token")
 	}
 	tokenstr := tokenI.(string)
 	return tokenstr, nil
-} */
+}
