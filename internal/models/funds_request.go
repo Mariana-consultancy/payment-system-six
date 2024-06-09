@@ -43,8 +43,8 @@ type GetPaymentRequest struct {
 type DepositRequests struct {
 	gorm.Model
 	DepositorAccountNumber uint    `json:"depositor_account_number"`
-	Amount                 float64 `json:"transaction_amount"`
-	Status                 string  `json:"balance_before"`
+	Amount                 float64 `json:"amount"`
+	Status                 string  `json:"status"`
 	IsCompleted            bool    `json:"is_completed"`
 }
 

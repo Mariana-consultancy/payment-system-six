@@ -181,32 +181,6 @@ func (u *HTTPHandler) LoginAdmin(c *gin.Context) {
 	}, nil)
 }
 
-// Protected Route
-func (u *HTTPHandler) GetAdminByEmail(c *gin.Context) {
-
-	_, err := u.GetAdminFromContext(c)
-	if err != nil {
-		util.Response(c, "Admin not logged in", 500, err.Error(), nil)
-		return
-	}
-
-	email := c.Query("email")
-	email = strings.TrimSpace(email)
-	if email == "" {
-		util.Response(c, "Email is required", 400, nil, nil)
-		return
-	}
-
-	admin, err := u.Repository.FindAdminByEmail(email)
-	if err != nil {
-		util.Response(c, "Admin not found", 404, err.Error(), nil)
-		return
-	}
-
-	util.Response(c, "Admin Found", 200, admin, nil)
-
-}
-
 func (u *HTTPHandler) GetAllUsers(c *gin.Context) {
 
 	_, err := u.GetAdminFromContext(c)

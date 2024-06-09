@@ -9,7 +9,6 @@ type Repository interface {
 	FindAllUsers() ([]models.User, error)
 	GetUserByAccountNumber(accountNumber uint) (*models.User, error)
 	FindAdminByEmail(email string) (*models.Admin, error)
-	TokenInBlacklist(token *string) bool
 	CreateUser(user *models.User) error
 	CreateAdmin(admin *models.Admin) error
 	UpdateUser(user *models.User) error
@@ -34,4 +33,6 @@ type Repository interface {
 	GetDepositRequestByRequestID(requestID uint) (*models.DepositRequests, error)
 	UpdateDepositRequest(depositRequest *models.DepositRequests) error
 	GenerateStatement(accountNumber uint) (*models.StatementDetails, error)
+	BlacklistToken(token *models.BlacklistTokens) error
+	TokenInBlacklist(token *string) bool
 }
